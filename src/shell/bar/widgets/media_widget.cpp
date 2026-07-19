@@ -33,7 +33,7 @@ MediaWidget::MediaWidget(
 
 void MediaWidget::create() {
   auto area = std::make_unique<InputArea>();
-  area->setAcceptedButtons(InputArea::buttonMask({BTN_LEFT, BTN_RIGHT}));
+  area->setAcceptedButtons(InputArea::buttonMask({BTN_LEFT, BTN_RIGHT, BTN_SIDE, BTN_EXTRA}));
   area->setOnEnter([this](const InputArea::PointerData&) {
     applyTitleScrollMode(m_label != nullptr && m_label->visible());
     this->requestUpdate();
@@ -47,8 +47,20 @@ void MediaWidget::create() {
       requestPanelToggle("control-center", "media");
       return;
     }
-    if (data.button == BTN_RIGHT && m_mpris != nullptr) {
+    if (m_mpris == nullptr) {
+      return;
+    }
+    if (data.button == BTN_RIGHT) {
       m_mpris->playPauseActive();
+      return;
+    }
+    if (data.button == BTN_SIDE) {
+      m_mpris->previousActive();
+      return;
+    }
+    if (data.button == BTN_EXTRA) {
+      m_mpris->nextActive();
+      return;
     }
   });
   m_area = area.get();
