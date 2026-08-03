@@ -1,5 +1,6 @@
 #include "completions/cli.h"
 
+#include "cli/parse.h"
 #include "completions_generated.h"
 
 #include <cstdio>
@@ -9,7 +10,12 @@
 namespace noctalia::completions {
   namespace {
 
-    constexpr const char* kHelpText = "Usage: noctalia completions <bash|fish|zsh>\n"
+    using cli_schema::CliCommand;
+    using cli_schema::CliFlag;
+    using cli_schema::CliPositional;
+    using cli_schema::ParsedArgs;
+
+    constexpr const char* kHelpText = "Usage: noctalia completions [bash|fish|zsh]\n"
                                       "\n"
                                       "Print a shell completion script to stdout.\n"
                                       "\n"
@@ -17,41 +23,57 @@ namespace noctalia::completions {
                                       "  source <(noctalia completions bash)\n"
                                       "  noctalia completions fish > ~/.config/fish/completions/noctalia.fish\n";
 
+    constexpr std::string_view kShellChoices[] = {"bash", "fish", "zsh"};
+
+    constexpr CliPositional kCompletionsPositionals[] = {
+        {.name = "shell",
+         .description = "target shell (bash, fish, zsh)",
+         .choices = kShellChoices,
+         .required = true,
+         .missingError = "missing shell choice",
+         .invalidChoiceError = "unknown shell"},
+    };
+
+    constexpr CliCommand kCompletionsCmd = {
+        .name = "completions",
+        .summary = "Generate shell completions",
+        .helpText = kHelpText,
+        .positionals = kCompletionsPositionals,
+    };
   } // namespace
 
   int runCli(int argc, char* argv[]) {
-    if (argc < 3) {
-      std::print(stderr, "{}", kHelpText);
+    if (argc >= 3 && std::strcmp(argv[2], "--help") == 0) {
+      std::println("{}", kHelpText);
+      return argc < 3 ? 1 : 0;
+    }
+
+    const auto parsed = cli_schema::parseArgs(argc, argv, 2, kCompletionsCmd);
+    if (!parsed) {
+      std::println(stderr, "error: {}", parsed.error());
+      std::println(stderr, "Run 'noctalia completions --help' for usage.");
       return 1;
     }
 
-    if (std::strcmp(argv[2], "--help") == 0) {
-      std::print("{}", kHelpText);
+    if (parsed->helpRequested) {
       return 0;
     }
 
-    if (argc > 3) {
-      std::println(stderr, "error: unexpected argument: {}", argv[3]);
-      std::println(stderr, "Run 'noctalia completions --help' for usage.");
-      return 1;
-    }
-
-    const char* shell = argv[2];
+    const std::string_view shell = parsed->positionals[0];
 
     const char* script = nullptr;
-    if (std::strcmp(shell, "bash") == 0) {
+    if (shell == "bash") {
       script = NOCTALIA_BASH_SCRIPT;
-    } else if (std::strcmp(shell, "zsh") == 0) {
+    } else if (shell == "zsh") {
       script = NOCTALIA_ZSH_SCRIPT;
-    } else if (std::strcmp(shell, "fish") == 0) {
+    } else if (shell == "fish") {
       script = NOCTALIA_FISH_SCRIPT;
-    } else {
-      std::println(stderr, "error: unknown shell: {}", shell);
-      std::println(stderr, "Run 'noctalia completions --help' for usage.");
-      return 1;
     }
 
-    std::fwrite(script, 1, std::strlen(script), stdout);
+    if (script != nullptr) {
+      std::fwrite(script, 1, std::strlen(script), stdout);
+    }
+
     return 0;
   }
 

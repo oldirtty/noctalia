@@ -972,6 +972,11 @@ _noctalia_sources = files(
   'src/theme/cli.cpp',
   'src/ipc/cli.cpp',
   'src/completions/cli.cpp',
+  'src/cli/parse.cpp',
+  'src/cli/schema_config.cpp',
+  'src/cli/schema_ipc.cpp',
+  'src/cli/schema_plugins.cpp',
+  'src/cli/schema_theme.cpp',
 )
 
 if sanitize
