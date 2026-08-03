@@ -1,6 +1,5 @@
 #include "completions/cli.h"
 
-#include "cli/parse.h"
 #include "cli/schema_root.h"
 #include "completions/generator.h"
 
