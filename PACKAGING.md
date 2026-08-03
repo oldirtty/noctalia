@@ -107,9 +107,6 @@ Prefix/datadir are baked into the binary via `NOCTALIA_INSTALL_PREFIX` /
 <prefix>/share/noctalia/assets/...
 <prefix>/share/applications/dev.noctalia.Noctalia.desktop
 <prefix>/share/icons/hicolor/scalable/apps/noctalia.svg
-<prefix>/share/bash-completion/completions/noctalia
-<prefix>/share/fish/vendor_completions.d/noctalia.fish
-<prefix>/share/zsh/site-functions/_noctalia
 ```
 
 The shipped `assets/` tree is **required at runtime**. Shipping only the binary
@@ -119,6 +116,18 @@ breaks fonts, translations, templates, glyphs, and sounds. See
 
 Not shipped (don’t look for them in the install): AppStream / metainfo XML, man
 pages, systemd units.
+
+### Shell Completions
+
+Shell completion scripts (Bash, Zsh, Fish) are no longer shipped as static files in the repository. They are generated dynamically by the compiled `noctalia` binary via its internal schema.
+
+Packagers should generate and install these directly during the build/install phase. For example:
+
+```bash
+# Assuming the binary was built in the 'build' directory
+./build/noctalia completions bash > "${pkgdir}/usr/share/bash-completion/completions/noctalia"
+./build/noctalia completions zsh  > "${pkgdir}/usr/share/zsh/site-functions/_noctalia"
+./build/noctalia completions fish > "${pkgdir}/usr/share/fish/vendor_completions.d/noctalia.fish"
 
 ## Dependencies
 

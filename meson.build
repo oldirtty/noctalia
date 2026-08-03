@@ -410,19 +410,6 @@ _wlr_ls_c = custom_target('wlr-layer-shell-unstable-v1-client-source',
 _protocol_sources += _wlr_ls_c
 _protocol_headers += _wlr_ls_h
 
-# ── embed shell completions ───────────────────────────────────────────────────
-_completions_fs = import('fs')
-_completions_cdata = configuration_data()
-
-_completions_cdata.set('NOCTALIA_BASH_SCRIPT', 'R"EOF(' + _completions_fs.read('assets/completions/noctalia.bash') + ')EOF"')
-_completions_cdata.set('NOCTALIA_ZSH_SCRIPT', 'R"EOF(' + _completions_fs.read('assets/completions/_noctalia') + ')EOF"')
-_completions_cdata.set('NOCTALIA_FISH_SCRIPT', 'R"EOF(' + _completions_fs.read('assets/completions/noctalia.fish') + ')EOF"')
-
-_completions_header = configure_file(
-  output: 'completions_generated.h',
-  configuration: _completions_cdata,
-)
-
 # ── Main sources ──────────────────────────────────────────────────────────────
 _noctalia_sources = files(
   'src/app/application.cpp',
@@ -1074,7 +1061,7 @@ _noctalia_cpp_args = [
 # archive whole; tests link it normally so only the objects they exercise enter
 # each test executable.
 noctalia_core_lib = static_library('noctalia_core',
-  sources: _noctalia_sources + _protocol_sources + _protocol_headers + [_git_revision_h, _completions_header],
+  sources: _noctalia_sources + _protocol_sources + _protocol_headers + [_git_revision_h],
   dependencies: _noctalia_dependencies,
   include_directories: _noctalia_inc,
   cpp_args: _noctalia_cpp_args,
@@ -1111,14 +1098,6 @@ install_data(
   'assets/noctalia.svg',
   install_dir: get_option('datadir') / 'icons' / 'hicolor' / 'scalable' / 'apps',
 )
-
-install_data('assets/completions/noctalia.bash',
-  install_dir: get_option('datadir') / 'bash-completion' / 'completions', rename: 'noctalia')
-install_data('assets/completions/_noctalia',
-  install_dir: get_option('datadir') / 'zsh' / 'site-functions')
-install_data('assets/completions/noctalia.fish',
-  install_dir: get_option('datadir') / 'fish' / 'vendor_completions.d')
-
 
 if build_tests
   _cpp_test_names = [
