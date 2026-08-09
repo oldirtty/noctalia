@@ -1117,6 +1117,7 @@ if build_tests
     'calendar_discovery_state',
     'capsule_group_lane_override',
     'capsule_group_reconcile',
+    'cli_parse',
     'clipboard_service',
     'clipboard_storage_permissions',
     'config_migration',

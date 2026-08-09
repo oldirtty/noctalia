@@ -9,7 +9,7 @@
 #include <array>
 #include <string_view>
 
-namespace noctalia::cli {
+namespace noctalia::cli_schema {
 
   inline constexpr std::array<std::string_view, 3> kShellChoices = {"bash", "fish", "zsh"};
 
@@ -31,4 +31,4 @@ namespace noctalia::cli {
       .subcommands = kRootSubcommands,
   };
 
-} // namespace noctalia::cli
+} // namespace noctalia::cli_schema

@@ -363,7 +363,12 @@ namespace noctalia::config {
         const char* tag = isError ? "ERROR" : "WARN "; // padded to align the path column
         const char* color = (isError ? colorErr : colorOut) ? (isError ? "\033[31m" : "\033[33m") : "";
         const char* reset = *color != '\0' ? "\033[0m" : "";
-        std::println(out, "{}{}{} {}: {}", color, tag, reset, entry.path, entry.message);
+
+        if (!entry.origin.valid()) {
+          std::println(out, "{}{}{} {}: {}", color, tag, reset, entry.path, entry.message);
+        } else {
+          std::println(out, "{}{}{} {}: {}: {}", color, tag, reset, entry.origin.format(), entry.path, entry.message);
+        }
       }
 
       if (errors > 0) {
@@ -418,9 +423,15 @@ namespace noctalia::config {
   } // namespace
 
   int runCli(int argc, char* argv[]) {
-    if (argc >= 3 && std::strcmp(argv[2], "--help") == 0) {
+    if (argc < 3) {
+      std::println(stderr, "error: config requires a command");
+      std::println(stderr, "Run 'noctalia config --help' for usage.");
+      return 1;
+    }
+
+    if (std::strcmp(argv[2], "--help") == 0 || std::strcmp(argv[2], "-h") == 0) {
       std::println("{}", kConfigCmd.helpText);
-      return argc < 3 ? 1 : 0;
+      return 0;
     }
 
     const cli_schema::CliCommand* cmd = nullptr;
