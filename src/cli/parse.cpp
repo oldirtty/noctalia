@@ -50,7 +50,7 @@ namespace noctalia::cli_schema {
     for (int i = startIndex; i < argc; ++i) {
       const std::string_view arg = argv[i];
 
-      if (arg == "--help") {
+      if (arg == "--help" || arg == "-h") {
         std::println("{}", cmd.helpText);
         result.helpRequested = true;
         return result;

@@ -24,6 +24,7 @@ namespace noctalia::ipc {
   inline constexpr std::string_view kBarLayers[] = {"overlay", "top"};
   inline constexpr std::string_view kBooleanStates[] = {"on", "off", "true", "false", "1", "0"};
   inline constexpr std::string_view kPowerProfiles[] = {"power-saver", "balanced", "performance"};
+  inline constexpr std::string_view kPowerCycleDirections[] = {"next", "prev"};
   inline constexpr std::string_view kLogLevels[] = {"trace", "debug", "info", "warn", "error", "off"};
   inline constexpr std::string_view kAutoHideStates[] = {"on", "off", "smart", "true", "false", "1", "0"};
   inline constexpr std::string_view kMediaActions[] = {"play", "pause", "play-pause", "stop", "next", "previous"};
@@ -186,7 +187,7 @@ namespace noctalia::ipc {
 
   // msg power-cycle [direction]
   inline constexpr CliPositional kPowerCyclePositionals[] = {
-      {.name = "direction", .description = "optional direction", .required = false}
+      {.name = "direction", .description = "optional direction", .choices = kPowerCycleDirections, .required = false}
   };
 
   // msg plugins <action> [source action]

@@ -90,23 +90,27 @@ namespace noctalia::config {
   inline constexpr cli_schema::CliCommand kValidateCmd = {
       .name = "validate",
       .summary = "Check config validity",
+      .helpText = kValidateHelpText,
       .positionals = kValidatePositionals,
   };
 
   inline constexpr cli_schema::CliCommand kExportCmd = {
       .name = "export",
       .summary = "Print the active config as TOML",
+      .helpText = kExportHelpText,
       .positionals = kExportPositionals,
   };
 
   inline constexpr cli_schema::CliCommand kSettingsCountCmd = {
       .name = "settings-count",
       .summary = "Count Settings UI controls",
+      .helpText = kSettingsCountHelpText,
   };
 
   inline constexpr cli_schema::CliCommand kReplayReportCmd = {
       .name = "replay-report",
       .summary = "Reconstruct config from a support report",
+      .helpText = kReplayHelpText,
       .flags = kReplayFlags,
       .positionals = kReplayPositionals,
   };

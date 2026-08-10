@@ -21,11 +21,7 @@ namespace noctalia::plugins {
       .positionals = kLintPositionals,
   };
 
-  inline constexpr std::string_view kPluginsSubcommands[] = {"lint"};
-
-  inline constexpr cli_schema::CliPositional kPluginsPositionals[] = {
-      {.name = "command", .description = "subcommand to run (lint)", .choices = kPluginsSubcommands, .required = true}
-  };
+  inline constexpr cli_schema::CliCommand kPluginsSubcommands[] = {kLintCmd};
 
   inline constexpr cli_schema::CliFlag kPluginsFlags[] = {
       {.longName = "--help", .description = "Print help for plugins"},
@@ -35,7 +31,7 @@ namespace noctalia::plugins {
       .name = "plugins",
       .summary = "Offline tools for plugin authors",
       .flags = kPluginsFlags,
-      .positionals = kPluginsPositionals
+      .subcommands = kPluginsSubcommands
   };
 
 } // namespace noctalia::plugins

@@ -966,6 +966,8 @@ _noctalia_sources = files(
   'src/theme/cli.cpp',
   'src/ipc/cli.cpp',
   'src/cli/parse.cpp',
+  'src/completions/cli.cpp',
+  'src/completions/generator.cpp',
 )
 
 if sanitize
